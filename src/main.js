@@ -1,10 +1,15 @@
 const getJoke = require("./joke");
-const core = require("@actions/core");
 
-async function run() {
-  const joke = await getJoke();
-  console.log(joke);
-  core.setOutput("joke", joke);
-}
+(async function run() {
+  try {
+    // `@actions/core` is ESM-only from v3+. Use dynamic import to load it from a CommonJS project.
+    const core = await import("@actions/core");
 
-run();
+    const joke = await getJoke();
+    console.log(joke);
+    core.setOutput("joke", joke);
+  } catch (error) {
+    console.error(error);
+    process.exit(1);
+  }
+})();
